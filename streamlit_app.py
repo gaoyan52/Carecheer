@@ -19,10 +19,16 @@ uploaded_file = st.file_uploader("Choose an image...", type=['png', 'jpg', 'jpeg
  
 
 if uploaded_file is not None:
-
     image = Image.open(uploaded_file)
-
-    st.image(image, caption='Your uploaded image', use_container_width=True)
+    # Auto-fix orientation from phone photos
+    try:
+        image = Image.open(uploaded_file)
+        image = image.transpose(Image.Transpose.EXIF)
+    except Exception:
+        pass
+    from PIL import ImageOps
+    image = ImageOps.exif_transpose(image)
+    st.image(image, caption="Your uploaded image", use_container_width=True)
 
    
 
